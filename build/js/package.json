@@ -3,8 +3,7 @@
   "version": "1.0-SNAPSHOT",
   "private": true,
   "workspaces": [
-    "packages/KotlinJSApp",
-    "packages/KotlinJSApp-test"
+    "packages/KotlinJSApp"
   ],
   "resolutions": {},
   "devDependencies": {},
