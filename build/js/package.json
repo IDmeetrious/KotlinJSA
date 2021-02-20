@@ -1,0 +1,15 @@
+{
+  "name": "KotlinJSApp",
+  "version": "1.0-SNAPSHOT",
+  "private": true,
+  "workspaces": [
+    "packages/KotlinJSApp",
+    "packages/KotlinJSApp-test"
+  ],
+  "resolutions": {},
+  "devDependencies": {},
+  "dependencies": {},
+  "peerDependencies": {},
+  "optionalDependencies": {},
+  "bundledDependencies": []
+}
