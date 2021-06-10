@@ -1,64 +1,87 @@
-import data.Repository
-import kotlinx.browser.document
+import data.Video
 import kotlinx.css.fontFamily
 import react.*
+import react.dom.div
 import react.dom.h3
-import react.dom.img
 import styled.css
-import styled.styledDiv
 import styled.styledH1
 
+external interface AppState : RState {
+    var currentVideo: Video?
+    var unwatchedVideos: List<Video>
+    var watchedVideos: List<Video>
+}
+
+@JsExport
 class App : RComponent<RProps, AppState>() {
-    private val repository = Repository()
+
+    override fun AppState.init() {
+//        val repository = Repository()
+//        unwatchedVideos = repository.unwatchedVideos
+//        watchedVideos = repository.watchedVideos
+        unwatchedVideos = listOf(
+            Video(1, "Building and breaking things", "John Doe", "https://youtu.be/PsaFVLr8t4E"),
+            Video(2, "The development process", "Jane Smith", "https://youtu.be/PsaFVLr8t4E"),
+            Video(3, "The Web 7.0", "Matt Miller", "https://youtu.be/PsaFVLr8t4E")
+        )
+
+        watchedVideos = listOf(
+            Video(4, "Mouseless development", "Tom Jerry", "https://youtu.be/PsaFVLr8t4E")
+        )
+    }
+
     override fun RBuilder.render() {
-        document.bgColor = "black"
-        document.fgColor = "white"
-        val rootDiv = document.getElementById("root")
-        react.dom.render(rootDiv) {
-            styledH1 {
-                css {
-                    fontFamily = "Arial"
-                }
-                +"Hello, React + Kotlin/JS!"
+        styledH1 {
+            css {
+                fontFamily = "Arial"
             }
-            styledDiv {
-                h3 {
-                    +"Videos to watch"
-                }
-                videoList {
-                    videos = repository.unwatchedVideos
-                    selectedVideo = state.currentVideo
-                    onSelectedVideo = { video ->
-                        setState { currentVideo = video }
-                    }
-                }
-                h3 {
-                    +"Videos watched"
-                }
-                videoList {
-                    videos = repository.watchedVideos
-                    selectedVideo = state.currentVideo
-                    onSelectedVideo = { video ->
-                        setState { currentVideo = video }
+            +"Hello, React + Kotlin/JS!"
+        }
+        div {
+            h3 {
+                +"Videos to watch"
+            }
+            videoList {
+                videos = state.unwatchedVideos
+                selectedVideo = state.currentVideo
+                onSelectedVideo = { video ->
+                    setState {
+                        currentVideo = video
+                        println("current video: ${currentVideo?.title}")
                     }
                 }
             }
-            styledDiv {
-                h3 {
-                    +"John Doe: Building and breaking things"
-                }
-                img {
-                    attrs {
-                        src = "https://via.placeholder.com/640x360.png?text=Video+Player+Placeholder"
-                    }
+
+            h3 {
+                +"Videos watched"
+            }
+            videoList {
+                videos = state.watchedVideos
+                selectedVideo = state.currentVideo
+                onSelectedVideo = { video ->
+                    setState { currentVideo = video }
                 }
             }
         }
-    }
-
-    private fun RBuilder.videoList(handler: VideoListProps.() -> Unit): ReactElement {
-        return child(VideoList::class) {
-            this.attrs(handler)
+        state.currentVideo?.let { currentVideo ->
+            videoPlayer {
+                video = currentVideo
+                unwatchedVideo = currentVideo in state.unwatchedVideos
+                onWatchedButtonPressed = {
+                    println("Change !watched state")
+                    if (video in state.unwatchedVideos) {
+                        setState {
+                            unwatchedVideos -= video
+                            watchedVideos += video
+                        }
+                    } else {
+                        setState {
+                            watchedVideos -= video
+                            unwatchedVideos += video
+                        }
+                    }
+                }
+            }
         }
     }
 }
