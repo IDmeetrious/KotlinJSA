@@ -16,9 +16,6 @@ external interface AppState : RState {
 class App : RComponent<RProps, AppState>() {
 
     override fun AppState.init() {
-//        val repository = Repository()
-//        unwatchedVideos = repository.unwatchedVideos
-//        watchedVideos = repository.watchedVideos
         unwatchedVideos = listOf(
             Video(1, "Building and breaking things", "John Doe", "https://youtu.be/PsaFVLr8t4E"),
             Video(2, "The development process", "Jane Smith", "https://youtu.be/PsaFVLr8t4E"),
